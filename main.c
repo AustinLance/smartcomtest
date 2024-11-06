@@ -21,21 +21,25 @@ char *lowercase(char *p)
     return ptr;
 }
 
-int getCmd(char *input)
+int getCmd(char *inputStr)
 {
     unsigned char parsePos = 0;
     unsigned char wordPos = 0;
+    memset(cmd, 0, sizeof(cmd));
 
-    while(!isalpha(input[parsePos]) && input[parsePos]!='\0') parsePos++;
-        if(isalpha(input[parsePos]))
+    while(!isalpha(inputStr[parsePos])) parsePos++;
+    if(isalpha(inputStr[parsePos]))
+    {
+        while(isalpha(inputStr[parsePos]))
         {
-            while(isalpha(input[parsePos]))
-            {
-                cmd[wordPos] = input[parsePos];
-                wordPos++;
-                parsePos++;
-            }
-        }        
+            cmd[wordPos] = inputStr[parsePos];
+            wordPos++;
+            parsePos++;
+        }
+    }
+
+    if(inputStr[parsePos] != ' ' && inputStr[parsePos] != '\n' && inputStr[parsePos] != '\0')
+        return 0;           //more chars following and no delimiter: invalid command
 
     cmd[wordPos] = '\0';
     return wordPos;
@@ -51,19 +55,23 @@ int main(int, char**){
 
     printf("Hello, from mybash!\n");
 
-    while(strcmp(lowercase(cmd), "exit"))
+    do
     {
         cmdPtr = NULL;
-        printf("%s>", currentPath);
+        memset(input, 0, sizeof(input));
+        printf(">");
         fgets(input, MAX_INPUT_LEN, stdin);
         if(strlen(input))
         {
-            int len = getCmd(input);
-            printf("%d %s\n", len, cmd);
-
-            if(strcmp(lowercase(cmd), "pwd") == 0)  cmdPtr = pwd;
-
-            if (cmdPtr != NULL) cmdPtr(&input[len]);
+            int cmdLen = getCmd(input);
+            if(cmdLen)
+            {
+                if(strcmp(lowercase(cmd), "pwd") == 0)  cmdPtr = pwd;
+                else if(strcmp(lowercase(cmd), "cd") == 0)  cmdPtr = cd;                
+            }
+            else printf("command len 0, %s.\n", cmd);
+            if (cmdPtr != NULL) cmdPtr(&input[cmdLen]);
+            else if(strcmp(lowercase(cmd), "exit")) printf("Invalid command.\n");
         }
-    }
+    }while(strcmp(lowercase(cmd), "exit"));
 }
