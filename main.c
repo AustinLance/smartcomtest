@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <linux/limits.h>
+#include "cmd/cmd.h"
 
 #define MAX_INPUT_LEN   255
 #define MAX_ARGS        10
@@ -10,6 +11,8 @@
 char currentPath[PATH_MAX];
 char input[MAX_INPUT_LEN];
 char cmd[MAX_INPUT_LEN];
+
+int (*cmdPtr)(char *p);
 
 char *lowercase(char *p)
 {
@@ -50,12 +53,17 @@ int main(int, char**){
 
     while(strcmp(lowercase(cmd), "exit"))
     {
-        printf("Current path is %s>", currentPath);
-        if (scanf("%s", &input))
+        cmdPtr = NULL;
+        printf("%s>", currentPath);
+        fgets(input, MAX_INPUT_LEN, stdin);
+        if(strlen(input))
         {
             int len = getCmd(input);
-
             printf("%d %s\n", len, cmd);
+
+            if(strcmp(lowercase(cmd), "pwd") == 0)  cmdPtr = pwd;
+
+            if (cmdPtr != NULL) cmdPtr(&input[len]);
         }
     }
 }
