@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
+#include <dirent.h>
 #include <linux/limits.h>
 #include "cmd.h"
 
@@ -35,11 +36,6 @@ static int getOneArg(char *result, const char *inputStr)
     return wordPos;
 }
 
-int dummy(char *args)
-{
-    printf("args are: %s\n", args);
-}
-
 int pwd(char *args)
 {
     printf("%s\n", currentPath);
@@ -57,4 +53,17 @@ int cd(char *args)
                 return 1;
             }
     }
+}
+
+int ls(char *args)
+{
+    DIR *d;
+    struct dirent *dir;
+    d = opendir(".");
+    if (d) 
+    {
+        while ((dir = readdir(d)) != NULL) printf("%s %s\n", dir->d_type==4 ? "dir " : "file" , dir->d_name);
+        closedir(d);
+    }
+    return(0);
 }

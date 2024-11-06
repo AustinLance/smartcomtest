@@ -38,7 +38,7 @@ int getCmd(char *inputStr)
         }
     }
 
-    if(inputStr[parsePos] != ' ' && inputStr[parsePos] != '\n' && inputStr[parsePos] != '\0')
+    if(inputStr[parsePos] != ' ' && inputStr[parsePos] != '\0')
         return 0;           //more chars following and no delimiter: invalid command
 
     cmd[wordPos] = '\0';
@@ -61,15 +61,16 @@ int main(int, char**){
         memset(input, 0, sizeof(input));
         printf(">");
         fgets(input, MAX_INPUT_LEN, stdin);
+        input[strlen(input)-1] = '\0';    //strip CR
         if(strlen(input))
         {
             int cmdLen = getCmd(input);
             if(cmdLen)
             {
                 if(strcmp(lowercase(cmd), "pwd") == 0)  cmdPtr = pwd;
-                else if(strcmp(lowercase(cmd), "cd") == 0)  cmdPtr = cd;                
+                else if(strcmp(lowercase(cmd), "cd") == 0)  cmdPtr = cd;
+                else if(strcmp(lowercase(cmd), "ls") == 0)  cmdPtr = ls;
             }
-            else printf("command len 0, %s.\n", cmd);
             if (cmdPtr != NULL) cmdPtr(&input[cmdLen]);
             else if(strcmp(lowercase(cmd), "exit")) printf("Invalid command.\n");
         }
