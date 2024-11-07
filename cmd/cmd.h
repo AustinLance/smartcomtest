@@ -1,3 +1,4 @@
-    int pwd(char *args);
-    int cd(char *args);
-    int ls(char *args);
+    int pwd(char *argStr);
+    int cd(char *argStr);
+    int ls(char *argStr);
+    int cp(char *argStr);
