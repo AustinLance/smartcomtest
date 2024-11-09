@@ -71,6 +71,7 @@ int main(int, char**){
                 else if(strcmp(lowercase(cmd), "cd") == 0)  cmdPtr = cd;
                 else if(strcmp(lowercase(cmd), "ls") == 0)  cmdPtr = ls;
                 else if(strcmp(lowercase(cmd), "cp") == 0)  cmdPtr = cp;
+                else if(strcmp(lowercase(cmd), "grep") == 0)  cmdPtr = grep;
             }
             if (cmdPtr != NULL) cmdPtr(&input[cmdLen]);
             else if(strcmp(lowercase(cmd), "exit")) printf("Invalid command.\n");

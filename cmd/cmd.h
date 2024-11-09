@@ -2,3 +2,4 @@
     int cd(char *argStr);
     int ls(char *argStr);
     int cp(char *argStr);
+    int grep(char *argStr);
