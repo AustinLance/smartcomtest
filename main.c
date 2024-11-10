@@ -14,6 +14,27 @@ char cmd[MAX_INPUT_LEN];
 
 int (*cmdPtr)(char *p);
 
+
+//add new commands here
+struct
+{
+    char cmdName[MAX_INPUT_LEN];
+    int (*cmdPtr)(char *p);
+}cmdTable[] =
+{
+    {"pwd",     pwd},
+    {"cd",      cd},
+    {"ls",      ls},
+    {"cp",      cp},
+    {"grep",    grep},
+    {"ping",    ping},
+};
+
+int (*lookupCmd())(char *cmd)
+{
+    for(int i=0; i<sizeof cmdTable; ++i) if(strcmp(cmd, cmdTable[i].cmdName) == 0) return cmdTable[i].cmdPtr;
+}
+
 char *lowercase(char *p)
 {
     char *ptr = p;
@@ -66,15 +87,8 @@ int main(int, char**){
         {
             int cmdLen = getCmd(input);
             if(cmdLen)
-            {
-                if(strcmp(lowercase(cmd), "pwd") == 0)  cmdPtr = pwd;
-                else if(strcmp(lowercase(cmd), "cd") == 0)  cmdPtr = cd;
-                else if(strcmp(lowercase(cmd), "ls") == 0)  cmdPtr = ls;
-                else if(strcmp(lowercase(cmd), "cp") == 0)  cmdPtr = cp;
-                else if(strcmp(lowercase(cmd), "grep") == 0)  cmdPtr = grep;
-                else if(strcmp(lowercase(cmd), "ping") == 0)  cmdPtr = ping;
-            }
-            if (cmdPtr != NULL) cmdPtr(&input[cmdLen]);
+                if(lookupCmd(cmd))
+                   lookupCmd(cmd)(&input[cmdLen]);
             else if(strcmp(lowercase(cmd), "exit")) printf("Invalid command.\n");
         }
     }while(strcmp(lowercase(cmd), "exit"));
