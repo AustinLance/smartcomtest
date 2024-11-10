@@ -3,3 +3,4 @@
     int ls(char *argStr);
     int cp(char *argStr);
     int grep(char *argStr);
+    int ping(char *argStr);
